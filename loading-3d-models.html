@@ -2,6 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
     <title>Three.js tests</title>
     <style>
       body {
@@ -56,13 +60,23 @@
 
       camera.position.z = 2;
 
+      var tanFOV = Math.tan(((Math.PI / 180) * camera.fov) / 2);
+      var windowHeight = window.innerHeight;
+
+      window.addEventListener("resize", onWindowResize, false);
+
+      function onWindowResize(event) {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.fov =
+          (360 / Math.PI) *
+          Math.atan(tanFOV * (window.innerHeight / windowHeight));
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
       function animate() {
         requestAnimationFrame(animate);
-
-        if (!!shiba) {
-            shiba.rotation.y += 0.01;
-        }
-
         renderer.render(scene, camera);
       }
 
